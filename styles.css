@@ -1,0 +1,49 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+    background-color: lightblue;
+}
+:root {
+    --xlarge-text: clamp(1rem,10vmin,6rem)
+}
+.outer-box {
+    margin: 0 auto;
+    height: 50vh;
+    margin-top: 25vh;
+    width: 60vh;
+    background-color: palegreen;
+    box-shadow: 1px 1px 3px 1px black;
+}
+
+.image-box {
+    margin: 0 auto;
+    height: 70%;
+    width: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+}
+
+.text-box {
+    margin: 0 auto;
+    width: 80%;
+    height: 30%;
+    font-size: var(--xlarge-text);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.letter-box {
+    text-align: center;
+}
+.go-red {
+    color: red;
+}
+.go-green {
+    color: green;
+}
