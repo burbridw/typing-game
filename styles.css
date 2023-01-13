@@ -38,10 +38,11 @@ body {
     align-items: center;
     padding-bottom: 0.5vh;
     border-bottom: 2px solid black;
+    position: fixed;
 }
 
-.inner-btn-container {
-    position: fixed;
+.game-btn-container {
+    transform: translateY(-100%);
 }
 
 .game-button,.inner-button {
@@ -66,6 +67,9 @@ body {
     display: flex;
     justify-content: space-around;
     flex-wrap: wrap;
+}
+.topic-btn-container {
+    margin-top: 8vh;
 }
 
 .topic-button {
@@ -148,7 +152,6 @@ body {
     margin: 0 auto;
     height: 50vh;
     width: 90vw;
-    box-shadow: var(--light-shadow);
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -182,10 +185,13 @@ body {
     align-items: center;
     border: 2px solid black;
     background-color: palegreen;
+    box-shadow: var(--light-shadow);
 }
 
 .control-panel {
-    background-color: lightgray;
+    border: none;
+    background-color: dodgerblue;
+    box-shadow: var(--light-shadow);
 }
 
 .game-select-box,.time-select-box {
@@ -228,7 +234,7 @@ body {
     width: 90%;
     background-color: orange;
     border-radius: 10px;
-    box-shadow: var(--med-shadow);
+    box-shadow: 0 0 25px 5px orange;
     font-size: var(--med-text);
     height: 15vh;
     display: flex;
@@ -266,8 +272,10 @@ body {
 .back-button {
     font-size: var(--med-text);
     border: none;
-    background-color: blue;
+    background-color: transparent;
     color: white;
+    border: 2px solid silver;
+    border-radius: 10px;
 }
 
 .text-box {
@@ -295,6 +303,7 @@ body {
     background-color: green;
     color: white;
     border-radius: 10px;
+    border: 2px solid silver;
     box-shadow: var(--light-shadow);
     display: flex;
     align-items: center;
@@ -312,7 +321,7 @@ body {
     box-shadow: var(--light-shadow);
     background-color: red;
     color: white;
-    border: none;
+    border: 2px solid silver;
     font-size: var(--med-text);
 }
 span {
