@@ -1,35 +1,6 @@
 const imageBox = document.querySelector(".image-box")
 const textBox = document.querySelector(".text-box")
 
-const startButtonTemplate = `
-    <div class="start-button-box">
-        <div class="start-button">
-            <span>START</span>
-        </div>
-    </div>
-`
-const controlPanelTemplate = `
-    <div class="control-panel">
-        <div class="game-select-box">
-            <div class="game-select-text">Set Game</div>
-            <div class="game-select"><span>FREE</span></div>
-        </div>
-        <div class="time-select-box">
-            <div class="time-select-text">Set Time</div>
-            <div class="time-select"><span>1m</span></div>
-        </div>
-        <div class="back-button-box">
-            <button class="back-button">BACK</button>
-        </div>
-    </div>
-`
-const readyBoxTemplate = `
-    <div class="ready-box">
-        <div class="ready-text"><span>READY</span></div>
-        <div class="ready-timer">3</div>
-    </div>
-`
-
 let activeArr = []
 let selectArr = []
 let displayArr = []
@@ -40,13 +11,29 @@ let quizCount = 0
 let score = 0
 let countDownTime = 3
 let time = "1m"
-let game = "free"
+let game = "FREE"
 let stop = false
 let trial = false
 let selectionOpen = false
 let gameActive = false
 let start = true
 let gameTime
+
+const startButtonTemplate = `
+    <div class="start-button-box">
+        <div class="start-button">
+            <span>START</span>
+        </div>
+    </div>
+`
+
+const readyBoxTemplate = `
+    <div class="ready-box">
+        <div class="ready-text"><span>READY</span></div>
+        <div class="ready-timer">3</div>
+    </div>
+`
+
 
 const gameRootMenu = document.querySelector(".game-root-menu")
 const gameBtnContainer = document.querySelector(".game-btn-container")
@@ -303,10 +290,21 @@ function buildStartButton() {
 }
 
 function buildControlPanel() {
-    game = "free"
-    time = "1m"
-    trial = false
-    imageBox.innerHTML = controlPanelTemplate
+    imageBox.innerHTML = `
+    <div class="control-panel">
+        <div class="game-select-box">
+            <div class="game-select-text">Set Game</div>
+            <div class="game-select"><span>${game}</span></div>
+        </div>
+        <div class="time-select-box">
+            <div class="time-select-text">Set Time</div>
+            <div class="time-select"><span>${time}</span></div>
+        </div>
+        <div class="back-button-box">
+            <button class="back-button">BACK</button>
+        </div>
+    </div>
+`
     document.querySelector(".game-select").addEventListener("click",changeGameSetting)
     document.querySelector(".time-select").addEventListener("click",changeTimeSetting)
     quitBtn.classList.add("behind")
@@ -315,35 +313,30 @@ function buildControlPanel() {
 
 function changeGameSetting() {
     let setGame = document.querySelector(".game-select")
-    if ( game === "free" ) {
-        game = "time"
+    if ( game === "FREE" ) {
+        game = "TIME"
         trial = false
-        setGame.innerHTML = `<span>TIME</span>`
-    } else if ( game === "time" ) {
-        game = "trial"
+    } else if ( game === "TIME" ) {
+        game = "TRIAL"
         trial = true
-        setGame.innerHTML = `<span>TRIAL</span>`
     } else {
-        game = "free"
+        game = "FREE"
         trial = false
-        setGame.innerHTML = `<span>Free</span>`
     }
+    setGame.innerHTML = `<span>${game}</span>`
 }
 function changeTimeSetting() {
     let setTime = document.querySelector(".time-select")
     if ( time === "1m" ) {
         time = "2m"
-        setTime.innerHTML = `<span>2m</span>`
     } else if ( time === "2m" ) {
         time = "3m"
-        setTime.innerHTML = `<span>3m</span>`
     } else if ( time === "3m" ) {
         time = "30s"
-        setTime.innerHTML = `<span>30s</span>`
     } else {
         time = "1m"
-        setTime.innerHTML = `<span>1m</span>`
     }
+    setTime.innerHTML = `<span>${time}</span>`
 }
 
 function setReady() {
@@ -353,8 +346,10 @@ function setReady() {
     quizCount = 0
     typeCount = 0
     stop = false
-    if ( game != "free" ) {
+    if ( game != "FREE" ) {
         document.querySelector(".timer-box").innerHTML = `<span>${timeObj[time]}</span>`
+    } else {
+        document.querySelector(".timer-box").innerHTML = `<span>0</span>`
     }
     document.querySelector(".score-box").innerHTML = `<span>${score}</span>`
     displayArr = activeArr.slice(0,activeArr.length)
@@ -372,11 +367,12 @@ function countDownStart() {
             setImage()
             quitBtn.classList.remove("behind")
             gameActive = true
-            if ( game != "free" ) {
+            if ( game != "FREE" ) {
                 gameTime = timeObj[time]
                 gameTimer()
             } else {
-                document.querySelector(".timer-box").innerHTML = ""
+                gameTime = 0
+                gameTimer()
             }
         } else if ( stop ) {
             clearInterval(countDown)
@@ -408,7 +404,9 @@ window.addEventListener("keydown",(x)=>{
             textBox.children[typeCount].classList.add("go-red")
             typeCount++
         } else if ( trial ) {
-            gameTime--
+            if ( gameTime >= 1 && !stop) {
+                gameTime--
+            }
             document.querySelector(".timer-box").innerHTML = `<span>${gameTime}</span>`
         }
         if ( typeCount === answer.length) {
@@ -435,6 +433,12 @@ function changeWord() {
         setTimeout( ()=>{
             setImage()
         },500)
+    } else if ( game === "FREE" ) {
+        displayArr = displayArr.sort( ()=> { return 0.5 - Math.random() } )
+        quizCount = 0
+        setTimeout( ()=>{
+            setImage()
+        },500)
     } else {
         stop = true
         gameActive = false
@@ -452,7 +456,9 @@ function quitGame() {
 function gameTimer() {
     let timerBox = document.querySelector(".timer-box")
     const newTimer = setInterval( ()=> {
-        if ( gameTime > 0 ) {
+        if ( game === "FREE" ) {
+            gameTime++
+        } else if ( gameTime >= 1 && !stop) {
             gameTime--
         }
         timerBox.innerHTML = `<span>${gameTime}</span>`
@@ -479,4 +485,7 @@ function clearToMenu() {
     activeArr = []
     displayArr = []
     answer = ""
+    game = "FREE"
+    time = "1m"
+    trial = false
 }
