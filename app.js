@@ -18,6 +18,7 @@ let selectionOpen = false
 let gameActive = false
 let start = true
 let gameTime
+let freeTime
 
 const startButtonTemplate = `
     <div class="start-button-box">
@@ -371,6 +372,7 @@ function countDownStart() {
                 gameTime = timeObj[time]
                 gameTimer()
             } else {
+                freeTime = timeObj[time]
                 gameTime = 0
                 gameTimer()
             }
@@ -422,27 +424,29 @@ window.addEventListener("keydown",(x)=>{
 })
 
 function changeWord() {
-    let finishedWord = document.querySelectorAll(".go-red")
-    finishedWord.forEach( (x)=>{
-        x.classList.remove("go-red")
-        x.classList.add("go-green")
-    })
-    typeCount = 0
-    quizCount++
-    if ( quizCount < displayArr.length) {
-        setTimeout( ()=>{
-            setImage()
-        },500)
-    } else if ( game === "FREE" ) {
-        displayArr = displayArr.sort( ()=> { return 0.5 - Math.random() } )
-        quizCount = 0
-        setTimeout( ()=>{
-            setImage()
-        },500)
-    } else {
-        stop = true
-        gameActive = false
-        textBox.innerHTML = `<div class="clear-message"><span>CLEAR!</span></div>`
+    if ( !stop ) {
+        let finishedWord = document.querySelectorAll(".go-red")
+        finishedWord.forEach( (x)=>{
+            x.classList.remove("go-red")
+            x.classList.add("go-green")
+        })
+        typeCount = 0
+        quizCount++
+        if ( quizCount < displayArr.length) {
+            setTimeout( ()=>{
+                setImage()
+            },500)
+        } else if ( game === "FREE" && gameTime < freeTime) {
+            displayArr = displayArr.sort( ()=> { return 0.5 - Math.random() } )
+            quizCount = 0
+            setTimeout( ()=>{
+                setImage()
+            },500)
+        } else {
+            stop = true
+            gameActive = false
+            textBox.innerHTML = `<div class="clear-message"><span>CLEAR!</span></div>`
+        }
     }
 }
 
@@ -456,13 +460,21 @@ function quitGame() {
 function gameTimer() {
     let timerBox = document.querySelector(".timer-box")
     const newTimer = setInterval( ()=> {
-        if ( game === "FREE" ) {
+        if ( game === "FREE" && !stop ) {
             gameTime++
         } else if ( gameTime >= 1 && !stop) {
             gameTime--
         }
         timerBox.innerHTML = `<span>${gameTime}</span>`
-        if ( gameTime < 1 ) {
+        if ( game === "FREE" && !stop) {
+            if ( gameTime >= freeTime ) {
+                clearInterval(newTimer)
+                gameActive = false
+                stop = true
+                gameTime = 0
+                textBox.innerHTML = `<div class="clear-message"><span>TIME OVER!</span></div>`
+            }
+        } else if ( gameTime < 1 ) {
             clearInterval(newTimer)
             gameActive = false
             stop = true
