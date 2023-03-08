@@ -383,19 +383,21 @@ function countDownStart() {
 }
 
 function setImage() {
-    let quizImage = displayArr[quizCount]
-    let quizText = allObj[quizImage].toLowerCase()
-    imageBox.innerHTML = `<img src="${quizImage}">`
-    textBox.textContent = quizText
-    answer = quizText.split("")
-    textBox.innerHTML = ""
-    for ( let i = 0; i < answer.length; i++) {
-        if ( answer.length < 14 ) {
-            textBox.innerHTML += `<div class="letter-box">${answer[i]}</div>`
-        } else if ( answer.length < 21) {
-            textBox.innerHTML += `<div class="letter-box small">${answer[i]}</div>`
-        } else {
-            textBox.innerHTML += `<div class="letter-box vsmall">${answer[i]}</div>`
+    if ( !stop ) {
+        let quizImage = displayArr[quizCount]
+        let quizText = allObj[quizImage].toLowerCase()
+        imageBox.innerHTML = `<img src="${quizImage}">`
+        textBox.textContent = quizText
+        answer = quizText.split("")
+        textBox.innerHTML = ""
+        for ( let i = 0; i < answer.length; i++) {
+            if ( answer.length < 14 ) {
+                textBox.innerHTML += `<div class="letter-box">${answer[i]}</div>`
+            } else if ( answer.length < 21) {
+                textBox.innerHTML += `<div class="letter-box small">${answer[i]}</div>`
+            } else {
+                textBox.innerHTML += `<div class="letter-box vsmall">${answer[i]}</div>`
+            }
         }
     }
 }
@@ -434,13 +436,17 @@ function changeWord() {
         quizCount++
         if ( quizCount < displayArr.length) {
             setTimeout( ()=>{
-                setImage()
+                if ( !stop ) {
+                    setImage()
+                }
             },500)
         } else if ( game === "FREE" && gameTime < freeTime) {
             displayArr = displayArr.sort( ()=> { return 0.5 - Math.random() } )
             quizCount = 0
             setTimeout( ()=>{
-                setImage()
+                if ( !stop ) {
+                    setImage()
+                }
             },500)
         } else {
             stop = true
