@@ -19,6 +19,7 @@ let gameActive = false
 let start = true
 let gameTime
 let freeTime
+let canInput = false
 
 const startButtonTemplate = `
     <div class="start-button-box">
@@ -399,11 +400,12 @@ function setImage() {
                 textBox.innerHTML += `<div class="letter-box vsmall">${answer[i]}</div>`
             }
         }
+        canInput = true
     }
 }
 
 window.addEventListener("keydown",(x)=>{
-    if ( gameActive ) {
+    if ( gameActive && canInput) {
         if ( x.key === answer[typeCount]) {
             textBox.children[typeCount].classList.add("go-red")
             typeCount++
@@ -416,6 +418,7 @@ window.addEventListener("keydown",(x)=>{
         if ( typeCount === answer.length) {
             score++
             showScore()
+            canInput = false
             changeWord()
             if (trial ) {
                 gameTime++
